@@ -21,7 +21,17 @@ public class User {
 
     private String profilePictureUrl;
 
+    private String firstName;
+
+    private String lastName;
+
+    private String password;
+
     private UserStatus status;
+
+    private String email;
+
+    private String phoneNNumber;
 
     private LocalDateTime lastActive;
 
