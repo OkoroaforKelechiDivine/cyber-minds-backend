@@ -24,11 +24,9 @@ public class UserServiceImplementation implements UserService {
     public User  findById(String id){
         return userRepository.findUserById(id);
     }
-
     public Boolean userDoesNotExistById(String id){
         return !userRepository.existsById(id);
     }
-
     private String encryptPassword(String password) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
