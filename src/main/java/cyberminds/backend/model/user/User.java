@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "users")
+//@Document(collection = "users")
 public class User {
 
     @Id
@@ -34,6 +34,8 @@ public class User {
     private String phoneNNumber;
 
     private LocalDateTime lastActive;
+
+    private LocalDateTime createdDate;
 
     private Boolean isVerified;
 }
