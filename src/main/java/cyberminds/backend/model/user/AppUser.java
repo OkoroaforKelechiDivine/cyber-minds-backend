@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class AppUser {
 
     @Id
     private String id;
@@ -26,13 +26,15 @@ public class User {
 
     private UserStatus status;
 
+    private Role role;
+
     private String email;
 
     private String phoneNNumber;
 
     private LocalDateTime lastActive;
 
-    private LocalDateTime createdDate;
+    private String createdDate;
 
     private Boolean isVerified;
 }

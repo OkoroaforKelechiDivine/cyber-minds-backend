@@ -1,11 +1,11 @@
-package cyberminds.backend.service;
+package cyberminds.backend.service.user;
 
 import cyberminds.backend.dto.request.RegistrationDTO;
 import cyberminds.backend.exception.AppException;
-import cyberminds.backend.model.user.User;
+import cyberminds.backend.model.user.AppUser;
 import cyberminds.backend.repository.user.UserRepository;
-import cyberminds.backend.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,26 +20,26 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    ModelMapper modelMapper = new ModelMapper();
 
-    public User  findById(String id){
+
+    public AppUser findById(String id){
         return userRepository.findUserById(id);
     }
-    public Boolean userDoesNotExistById(String id){
+    public Boolean userDoesNotExistByI(String id){
         return !userRepository.existsById(id);
     }
     private String encryptPassword(String password) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
     }
-
     public Boolean alreadyExistByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-
-
     private boolean isValidEmail(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
     }
@@ -49,22 +49,23 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User createUser(RegistrationDTO user) throws AppException {
+    public AppUser createUser(RegistrationDTO user) throws AppException {
 
         if (Objects.equals(user.getEmail(), "")){
             throw new AppException("User email is empty.");
         }
-        if (isValidEmail(user.getEmail())){
+        if (!isValidEmail(user.getEmail())){
             throw new AppException("Invalid user email.");
         }
-        if (isStrongPassword(user.getPassword())){
+        if (!isStrongPassword(user.getPassword())){
             if (user.getPassword().length() < 5){
                 throw new AppException("User password should not be less than 5 characters.");
             }
             throw new AppException("User password is too weak");
         }
-        User appUser = new User();
-        appUser.setCreatedDate(LocalDateTime.now());
+        AppUser appUser = new AppUser();
+        modelMapper.map(user, appUser);
+        appUser.setCreatedDate(LocalDateTime.now().toString());
         appUser.setEmail(user.getEmail());
         appUser.setPassword(encryptPassword(user.getPassword()));
 

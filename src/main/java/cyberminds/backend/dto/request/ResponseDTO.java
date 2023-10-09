@@ -1,6 +1,7 @@
 package cyberminds.backend.dto.request;
 
 
+import cyberminds.backend.model.user.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,19 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseDTO {
 
-    private String id;
+    private AppUser appUser;
 
     private String token;
-
-    private String email;
-
-    private Boolean isVerified;
-
-    private String createdDate;
-
-    private String verificationToken;
-
-    private Boolean isActive;
-
-    private String modifiedDate;
 }

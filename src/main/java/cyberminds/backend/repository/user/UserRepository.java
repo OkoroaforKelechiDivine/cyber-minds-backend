@@ -1,15 +1,13 @@
 package cyberminds.backend.repository.user;
 
-import cyberminds.backend.model.user.User;
+import cyberminds.backend.model.user.AppUser;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-    User findByEmail(String email);
+public interface UserRepository extends MongoRepository<AppUser, String> {
+    AppUser findByEmail(String email);
 
-    User findUserById(String id);
+    AppUser findUserById(String id);
     Boolean existsByEmail(String email);
 }
