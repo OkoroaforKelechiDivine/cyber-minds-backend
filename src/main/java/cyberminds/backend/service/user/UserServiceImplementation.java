@@ -4,12 +4,17 @@ import cyberminds.backend.dto.request.RegistrationDTO;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
 import cyberminds.backend.repository.user.UserRepository;
+import cyberminds.backend.service.utils.OTPGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -20,15 +25,10 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
     ModelMapper modelMapper = new ModelMapper();
-
-
-    public AppUser findById(String id){
-        return userRepository.findUserById(id);
-    }
-    public Boolean userDoesNotExistByI(String id){
-        return !userRepository.existsById(id);
-    }
     private String encryptPassword(String password) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
@@ -43,21 +43,19 @@ public class UserServiceImplementation implements UserService {
     private boolean isValidEmail(String email) {
         return EMAIL_PATTERN.matcher(email).matches();
     }
-
     private boolean isStrongPassword(String password) {
         return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
     }
-
     @Override
-    public AppUser createUser(RegistrationDTO user) throws AppException {
+    public void createUser(RegistrationDTO user) throws AppException {
 
         if (Objects.equals(user.getEmail(), "")){
             throw new AppException("User email is empty.");
         }
-        if (!isValidEmail(user.getEmail())){
+        if (isValidEmail(user.getEmail())){
             throw new AppException("Invalid user email.");
         }
-        if (!isStrongPassword(user.getPassword())){
+        if (isStrongPassword(user.getPassword())){
             if (user.getPassword().length() < 5){
                 throw new AppException("User password should not be less than 5 characters.");
             }
@@ -72,6 +70,40 @@ public class UserServiceImplementation implements UserService {
         if (alreadyExistByEmail(appUser.getEmail())){
             throw new AppException("User with email '" + appUser.getEmail() +  "' already exists.");
         }
-        return userRepository.save(appUser);
+        userRepository.save(appUser);
     }
+    public void sendOTPByEmail(String email) throws MessagingException {
+        if (isValidEmail(email)) {
+            throw new MessagingException("Invalid user email.");
+        }
+        if (alreadyExistByEmail(email)) {
+            String otp = OTPGenerator.generateOTP();
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(email);
+            helper.setSubject("Forgot Password OTP");
+            helper.setText("Your OTP for resetting the password is: " + otp);
+            javaMailSender.send(message);
+        }
+    }
+    @Override
+    public void resetPassword(String email, String newPassword, String confirmPassword) throws AppException {
+        if (!isValidEmail(email)) {
+            throw new AppException("Invalid user email.");
+        }
+        AppUser user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new AppException("User with email '" + email + "' does not exist.");
+        }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new AppException("New password and confirm password do not match.");
+        }
+        if (isStrongPassword(newPassword)) {
+            throw new AppException("New password is too weak.");
+        }
+        String hashedNewPassword = encryptPassword(newPassword);
+        user.setPassword(hashedNewPassword);
+        userRepository.save(user);
+    }
+
 }
