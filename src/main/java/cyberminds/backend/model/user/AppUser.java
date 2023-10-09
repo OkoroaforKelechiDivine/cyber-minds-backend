@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "users")
-public class User {
+public class AppUser {
 
     @Id
     private String id;
@@ -29,11 +26,15 @@ public class User {
 
     private UserStatus status;
 
+    private Role role;
+
     private String email;
 
     private String phoneNNumber;
 
     private LocalDateTime lastActive;
+
+    private String createdDate;
 
     private Boolean isVerified;
 }
