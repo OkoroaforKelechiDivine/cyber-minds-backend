@@ -52,10 +52,10 @@ public class UserServiceImplementation implements UserService {
         if (Objects.equals(user.getEmail(), "")){
             throw new AppException("User email is empty.");
         }
-        if (isValidEmail(user.getEmail())){
+        if (!isValidEmail(user.getEmail())){
             throw new AppException("Invalid user email.");
         }
-        if (isStrongPassword(user.getPassword())){
+        if (!isStrongPassword(user.getPassword())){
             if (user.getPassword().length() < 5){
                 throw new AppException("User password should not be less than 5 characters.");
             }
