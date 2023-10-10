@@ -27,7 +27,6 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO applicationUser) throws AppException {
-        log.info("Account creation started successfully");
         if (userService.alreadyExistByEmail(applicationUser.getEmail())) {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDetails);
