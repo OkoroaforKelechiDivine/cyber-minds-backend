@@ -24,13 +24,19 @@ public class UserController {
 
     @Autowired
     private UserServiceImplementation userService;
+
     @PostMapping("/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO applicationUser) throws AppException {
         log.info("Account creation started successfully");
+        if (userService.alreadyExistByEmail(applicationUser.getEmail())) {
+            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDetails);
+        }
         userService.createUser(applicationUser);
         ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
-        return ResponseEntity.status(201).body(responseDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDetails);
     }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
         try {

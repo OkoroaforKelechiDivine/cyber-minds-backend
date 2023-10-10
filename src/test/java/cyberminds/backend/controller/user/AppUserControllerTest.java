@@ -35,8 +35,8 @@ public class AppUserControllerTest {
         registrationDTO.setEmail("okoroaforkelechi123@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
 
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/users/create")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/users/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/users/create")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/users/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
