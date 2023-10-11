@@ -40,7 +40,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, ApplicationContext context) {
         this.authenticationManager = authenticationManager;
         repository = context.getBean(UserRepository.class);
-        setFilterProcessesUrl("/api/users/login");
+        setFilterProcessesUrl("/api/auths/login");
     }
 
     @Override
@@ -80,7 +80,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         response.getOutputStream().print("{ \"data\":"  + oMapper.writeValueAsString(responseDto) +  "}");
         response.flushBuffer();
-        log.info(token);
     }
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
@@ -88,5 +87,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UnsuccessfulLogin responseDetails = new UnsuccessfulLogin(LocalDateTime.now(), "Incorrect email or password", "Bad request", "/api/users/login");
         response.getOutputStream().print("{ \"message\":"  + responseDetails +  "}");
     }
-
 }
