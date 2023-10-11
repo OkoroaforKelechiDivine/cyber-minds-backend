@@ -70,8 +70,8 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void sendOTPByEmail(String email) throws MessagingException {
-        if (isValidEmail(email)) {
+    public void forgotPassword(String email) throws MessagingException {
+        if (!isValidEmail(email)) {
             throw new MessagingException("Invalid user email.");
         }
         if (alreadyExistByEmail(email)) {

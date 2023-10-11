@@ -36,8 +36,8 @@ public class AuthControllerTest {
         registrationDTO.setLastName("Doe");
         registrationDTO.setEmail("okoroaforkelechi123@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/users/create")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -49,8 +49,8 @@ public class AuthControllerTest {
         LoginDTO loginRequest = new LoginDTO();
         loginRequest.setEmail("okoroaforkelechi123@gmail.com");
         loginRequest.setPassword("StrongPassword123@");
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/users/login")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -61,7 +61,7 @@ public class AuthControllerTest {
     public void test_forgotPassword() throws Exception {
         ForgotPasswordRequestDTO forgotPasswordRequest = new ForgotPasswordRequestDTO();
         forgotPasswordRequest.setEmail("okoroaforkelechi123@gmail.com");
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/forgot-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
