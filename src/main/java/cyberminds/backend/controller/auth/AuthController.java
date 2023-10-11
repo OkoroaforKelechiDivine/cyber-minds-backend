@@ -1,4 +1,4 @@
-package cyberminds.backend.controller.user;
+package cyberminds.backend.controller.auth;
 
 import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.PasswordResetDTO;
@@ -17,10 +17,10 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auths")
 @Slf4j
 @CrossOrigin(origins = "true", allowCredentials = "true")
-public class UserController {
+public class AuthController {
 
     @Autowired
     private UserServiceImplementation userService;

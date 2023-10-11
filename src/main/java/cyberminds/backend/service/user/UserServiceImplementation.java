@@ -48,7 +48,6 @@ public class UserServiceImplementation implements UserService {
     }
     @Override
     public void createUser(RegistrationDTO user) throws AppException {
-
         if (Objects.equals(user.getEmail(), "")){
             throw new AppException("User email is empty.");
         }
@@ -67,11 +66,10 @@ public class UserServiceImplementation implements UserService {
         appUser.setEmail(user.getEmail());
         appUser.setPassword(encryptPassword(user.getPassword()));
 
-        if (alreadyExistByEmail(appUser.getEmail())){
-            throw new AppException("User with email '" + appUser.getEmail() +  "' already exists.");
-        }
         userRepository.save(appUser);
     }
+
+    @Override
     public void sendOTPByEmail(String email) throws MessagingException {
         if (isValidEmail(email)) {
             throw new MessagingException("Invalid user email.");
@@ -84,6 +82,7 @@ public class UserServiceImplementation implements UserService {
             helper.setSubject("Forgot Password OTP");
             helper.setText("Your OTP for resetting the password is: " + otp);
             javaMailSender.send(message);
+            log.info("This is the OTP -->{}", otp);
         }
     }
     @Override
@@ -105,5 +104,4 @@ public class UserServiceImplementation implements UserService {
         user.setPassword(hashedNewPassword);
         userRepository.save(user);
     }
-
 }
