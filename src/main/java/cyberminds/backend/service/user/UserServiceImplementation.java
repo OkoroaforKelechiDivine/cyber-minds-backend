@@ -71,11 +71,9 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public void forgotPassword(String email) throws MessagingException {
-        log.info("Got here");
         if (!isValidEmail(email)) {
             throw new MessagingException("Invalid user email.");
         }
-        log.info("Well, I saw this");
         if (alreadyExistByEmail(email)) {
             String otp = OTPGenerator.generateOTP();
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -86,7 +84,6 @@ public class UserServiceImplementation implements UserService {
             javaMailSender.send(message);
             log.info("This is the OTP -->{}", otp);
         }
-        log.info("then I ended here");
     }
     @Override
     public void resetPassword(String email, String newPassword, String confirmPassword) throws AppException {
