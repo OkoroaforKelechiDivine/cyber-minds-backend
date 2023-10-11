@@ -37,15 +37,14 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
-        try {
-            userService.forgotPassword(forgotPasswordRequestDTO.getEmail());
-            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "OTP sent to your email for password reset.", HttpStatus.OK.toString());
-            return ResponseEntity.ok(responseDetails);
-        } catch (MessagingException e) {
-            ResponseDetails errorResponse = new ResponseDetails(LocalDateTime.now(), "Failed to send OTP email.", HttpStatus.INTERNAL_SERVER_ERROR.toString());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws MessagingException {
+        if (!userService.alreadyExistByEmail(forgotPasswordRequestDTO.getEmail())){
+            ResponseDetails userDoesNotExist = new ResponseDetails(LocalDateTime.now(), "User with that email does not exist", HttpStatus.NOT_FOUND.toString());
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(userDoesNotExist);
         }
+        userService.forgotPassword(forgotPasswordRequestDTO.getEmail());
+        ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "OTP sent to your email for password reset.", HttpStatus.OK.toString());
+        return ResponseEntity.ok(responseDetails);
     }
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDTO passwordResetDTO) {

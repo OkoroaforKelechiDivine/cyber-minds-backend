@@ -60,8 +60,9 @@ public class AuthControllerTest {
     @Test
     public void test_forgotPassword() throws Exception {
         ForgotPasswordRequestDTO forgotPasswordRequest = new ForgotPasswordRequestDTO();
-        forgotPasswordRequest.setEmail("okoroaforkelechi123@gmail.com");
-        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
+        forgotPasswordRequest.setEmail("okorrkelechi123@gmail.com");
+//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/forgot-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
