@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cyberminds.backend.BackendApplication;
 import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.LoginDTO;
-import cyberminds.backend.dto.request.PasswordResetDTO;
+import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ public class AuthControllerTest {
 
     @Test
     public void test_resetPassword() throws Exception {
-        PasswordResetDTO resetPasswordRequest = new PasswordResetDTO();
+        ResetPasswordDTO resetPasswordRequest = new ResetPasswordDTO();
         resetPasswordRequest.setEmail("okoroaforkelechi123@gmail.com");
         resetPasswordRequest.setNewPassword("NewStrongPassword123@");
         resetPasswordRequest.setConfirmPassword("NewStrongPassword123@");

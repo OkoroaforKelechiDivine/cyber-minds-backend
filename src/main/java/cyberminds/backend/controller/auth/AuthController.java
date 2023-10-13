@@ -1,7 +1,7 @@
 package cyberminds.backend.controller.auth;
 
 import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
-import cyberminds.backend.dto.request.PasswordResetDTO;
+import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
 import cyberminds.backend.dto.response.ResponseDetails;
 import cyberminds.backend.exception.AppException;
@@ -46,12 +46,13 @@ public class AuthController {
         ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "OTP sent to your email for password reset.", HttpStatus.OK.toString());
         return ResponseEntity.ok(responseDetails);
     }
+
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetDTO passwordResetDTO) {
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
         try {
-            userService.resetPassword(passwordResetDTO.getEmail(), passwordResetDTO.getNewPassword(), passwordResetDTO.getConfirmPassword());
+            userService.resetPassword(resetPasswordDTO.getEmail(), resetPasswordDTO.getNewPassword(), resetPasswordDTO.getConfirmPassword());
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Password reset successfully.", HttpStatus.OK.toString());
-            log.info("Password reset successful and the new password is " + passwordResetDTO.getNewPassword());
+            log.info("Password reset successful and the new password is " + resetPasswordDTO.getNewPassword());
             return ResponseEntity.ok(responseDetails);
         } catch (AppException e) {
             ResponseDetails errorResponse = new ResponseDetails(LocalDateTime.now(), e.getMessage(), HttpStatus.BAD_REQUEST.toString());

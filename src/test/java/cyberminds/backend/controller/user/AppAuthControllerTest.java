@@ -1,20 +1,9 @@
 package cyberminds.backend.controller.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cyberminds.backend.BackendApplication;
-import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
-import cyberminds.backend.dto.request.LoginDTO;
-import cyberminds.backend.dto.request.PasswordResetDTO;
-import cyberminds.backend.dto.request.RegistrationDTO;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @SpringBootTest(classes = BackendApplication.class)
 @AutoConfigureMockMvc
