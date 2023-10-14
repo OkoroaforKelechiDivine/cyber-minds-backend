@@ -34,7 +34,7 @@ public class AuthServiceImplementation implements AuthService{
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
     }
-    public Boolean alreadyExistByEmail(String email){
+    public Boolean existByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
@@ -76,7 +76,7 @@ public class AuthServiceImplementation implements AuthService{
         if (!isValidEmail(email)) {
             throw new MessagingException("Invalid user email.");
         }
-        if (alreadyExistByEmail(email)) {
+        if (existByEmail(email)) {
             String otp = OTPGenerator.generateOTP();
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

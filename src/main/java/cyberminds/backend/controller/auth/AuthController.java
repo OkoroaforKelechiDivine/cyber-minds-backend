@@ -27,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException {
-        if (authServiceImplementation.alreadyExistByEmail(user.getEmail())) {
+        if (authServiceImplementation.existByEmail(user.getEmail())) {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDetails);
         }
@@ -38,7 +38,7 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws MessagingException {
-        if (!authServiceImplementation.alreadyExistByEmail(forgotPasswordRequestDTO.getEmail())){
+        if (!authServiceImplementation.existByEmail(forgotPasswordRequestDTO.getEmail())){
             ResponseDetails userDoesNotExist = new ResponseDetails(LocalDateTime.now(), "User with that email does not exist", HttpStatus.NOT_FOUND.toString());
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(userDoesNotExist);
         }
