@@ -3,6 +3,7 @@ package cyberminds.backend.service.user;
 import cyberminds.backend.dto.request.RegistrationDTO;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
+import cyberminds.backend.model.user.Gender;
 import cyberminds.backend.repository.user.UserRepository;
 import cyberminds.backend.service.utils.OTPGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,7 @@ public class UserServiceImplementation implements UserService {
         AppUser appUser = new AppUser();
         modelMapper.map(user, appUser);
         appUser.setCreatedDate(LocalDateTime.now().toString());
+        appUser.setGender(Gender.valueOf(user.getGender()));
         appUser.setEmail(user.getEmail());
         appUser.setPassword(encryptPassword(user.getPassword()));
 
