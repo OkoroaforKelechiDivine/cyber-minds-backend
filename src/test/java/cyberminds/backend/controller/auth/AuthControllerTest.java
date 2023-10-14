@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cyberminds.backend.BackendApplication;
 import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.LoginDTO;
-import cyberminds.backend.dto.request.PasswordResetDTO;
+import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class AuthControllerTest {
         RegistrationDTO registrationDTO = new RegistrationDTO();
         registrationDTO.setFirstName("John");
         registrationDTO.setLastName("Doe");
-        registrationDTO.setEmail("okoroaforkelechi123@gmail.com");
+        registrationDTO.setEmail("oroaforkelechi123@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
         mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
@@ -60,8 +60,9 @@ public class AuthControllerTest {
     @Test
     public void test_forgotPassword() throws Exception {
         ForgotPasswordRequestDTO forgotPasswordRequest = new ForgotPasswordRequestDTO();
-        forgotPasswordRequest.setEmail("okoroaforkelechi123@gmail.com");
-        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
+        forgotPasswordRequest.setEmail("okorrkelechi123@gmail.com");
+//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/forgot-password")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(forgotPasswordRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -69,7 +70,7 @@ public class AuthControllerTest {
 
     @Test
     public void test_resetPassword() throws Exception {
-        PasswordResetDTO resetPasswordRequest = new PasswordResetDTO();
+        ResetPasswordDTO resetPasswordRequest = new ResetPasswordDTO();
         resetPasswordRequest.setEmail("okoroaforkelechi123@gmail.com");
         resetPasswordRequest.setNewPassword("NewStrongPassword123@");
         resetPasswordRequest.setConfirmPassword("NewStrongPassword123@");

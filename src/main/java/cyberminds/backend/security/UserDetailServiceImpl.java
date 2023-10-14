@@ -6,6 +6,7 @@ import cyberminds.backend.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,12 +23,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
     UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        AppUser appUser = userRepository.findByEmail(s);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser appUser = userRepository.findByEmail(email);
         if (appUser == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new org.springframework.security.core.userdetails.User(appUser.getEmail(), appUser.getPassword(), getAuthorities(appUser.getRole()));
+        return new User(appUser.getEmail(), appUser.getPassword(), getAuthorities(appUser.getRole()));
     }
 
     private Collection<GrantedAuthority> getGrantedAuthorities(Role role) {
