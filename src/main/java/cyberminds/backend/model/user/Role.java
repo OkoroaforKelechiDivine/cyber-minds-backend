@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Role {
 
-    RIDER("RIDER"),
+    RIDER("USER"),
     ADMIN("ADMIN");
 
     public final String role;
