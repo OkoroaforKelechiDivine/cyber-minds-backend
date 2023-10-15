@@ -83,12 +83,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        UnsuccessfulLogin responseDetails = new UnsuccessfulLogin(LocalDateTime.now(), "Access Denied", "Forbidden", "/api/auths/login");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonResponse = objectMapper.writeValueAsString(responseDetails);
-        response.setContentType("application/json");
-        response.getWriter().write(jsonResponse);
-        response.getWriter().flush();
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        super.unsuccessfulAuthentication(request, response, failed);
+        UnsuccessfulLogin responseDetails = new UnsuccessfulLogin(LocalDateTime.now(), "Incorrect email or password", "Bad request", "/api/auths/login");
+        response.getOutputStream().print("{ \"message\":"  + responseDetails +  "}");
     }
 }
