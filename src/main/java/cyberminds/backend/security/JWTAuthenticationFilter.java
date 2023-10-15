@@ -91,5 +91,4 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(jsonResponse);
         response.getWriter().flush();
     }
-
 }
