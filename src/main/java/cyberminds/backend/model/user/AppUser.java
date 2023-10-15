@@ -20,6 +20,8 @@ public class AppUser {
 
     private String firstName;
 
+    private Gender gender;
+
     private String lastName;
 
     private String password;

@@ -1,12 +1,17 @@
 package cyberminds.backend.service.user;
 
-import cyberminds.backend.dto.request.RegistrationDTO;
-import cyberminds.backend.exception.AppException;
-
-import javax.mail.MessagingException;
+import cyberminds.backend.model.user.AppUser;
 
 public interface UserService {
-    void createUser(RegistrationDTO blogger) throws AppException;
-    void resetPassword(String email, String newPassword, String confirmPassword) throws AppException;
-    void forgotPassword(String email) throws MessagingException;
+
+    void followFriend(AppUser user);
+    void searchForFriends(AppUser user);
+    void unFollowFriend(AppUser user);
+    void  acceptFriendRequest(AppUser user);
+    void deleteFriendRequest();
+    void numberOfFriends(int numberOfFriends);
+    void numberOfLikes(int numberOfLikes);
+    void numberOfPosts(int numberOfPosts);
+    void numberOfComments(int numberOfComments);
+    void numberOfVideos(int numberOfVideos);
 }
