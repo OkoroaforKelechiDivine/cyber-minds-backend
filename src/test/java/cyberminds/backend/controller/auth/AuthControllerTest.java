@@ -38,8 +38,8 @@ public class AuthControllerTest {
         registrationDTO.setEmail("ifeoluwareabiu6@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
         registrationDTO.setGender(Gender.FEMALE.toString());
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
@@ -51,8 +51,8 @@ public class AuthControllerTest {
         LoginDTO loginRequest = new LoginDTO();
         loginRequest.setEmail("okororkelechi123@gmail.com");
         loginRequest.setPassword("StrongPassword123@");
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
