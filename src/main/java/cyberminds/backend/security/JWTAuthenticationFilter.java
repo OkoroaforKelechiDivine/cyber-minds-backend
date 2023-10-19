@@ -76,6 +76,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .token(token)
                 .build();
 
+        log.info(token);
+
         response.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
         response.getOutputStream().print("{ \"data\":"  + oMapper.writeValueAsString(responseDto) +  "}");

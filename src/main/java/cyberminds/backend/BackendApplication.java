@@ -1,5 +1,7 @@
 package cyberminds.backend;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 @SpringBootApplication
 @Profile("deployment")
 @Slf4j
+@Configuration
 public class BackendApplication {
 
     public static void main(String[] args) {
@@ -24,5 +27,12 @@ public class BackendApplication {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
     }
 }

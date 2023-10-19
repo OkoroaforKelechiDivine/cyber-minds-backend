@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +36,10 @@ public class AppUser {
     private String email;
 
     private String phoneNNumber;
+
+    private Set<String> following = new HashSet<>();
+
+    private Set<String> followers = new HashSet<>();
 
     private LocalDateTime lastActive;
 

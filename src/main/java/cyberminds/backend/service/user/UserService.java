@@ -1,10 +1,12 @@
 package cyberminds.backend.service.user;
 
+import cyberminds.backend.dto.request.FriendsDTO;
+import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
 
 public interface UserService {
 
-    void followFriend(AppUser user);
+    boolean followFriend(FriendsDTO friendsDTO) throws AppException;
     void searchForFriends(AppUser user);
     void unFollowFriend(AppUser user);
     void  acceptFriendRequest(AppUser user);
