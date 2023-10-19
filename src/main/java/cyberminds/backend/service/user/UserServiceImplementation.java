@@ -1,33 +1,38 @@
 package cyberminds.backend.service.user;
 
-import cyberminds.backend.dto.request.RegistrationDTO;
+import cyberminds.backend.dto.request.FriendsDTO;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
-import cyberminds.backend.model.user.Gender;
 import cyberminds.backend.repository.user.UserRepository;
-import cyberminds.backend.service.utils.OTPGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.regex.Pattern;
-
+//http://localhost:9090/api/users/follow
 @Service
 @Slf4j
 public class UserServiceImplementation implements UserService {
 
+    @Autowired
+    private UserRepository userRepository;
+    public boolean followFriend(FriendsDTO friendsDTO) throws AppException {
+        String userId = friendsDTO.getUserId();
+        String friendId = friendsDTO.getFriendId();
 
-    @Override
-    public void followFriend(AppUser user) {
+        AppUser currentUser = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        AppUser friendToFollow = userRepository.findById(friendId).orElseThrow(() -> new AppException("Friend not found"));
 
+        if (!currentUser.getFollowing().contains(friendId)) {
+            currentUser.getFollowing().add(friendId);
+            friendToFollow.getFollowers().add(userId);
+
+            userRepository.save(currentUser);
+            userRepository.save(friendToFollow);
+        } else {
+            throw new AppException("User is already following the friend.");
+        }
+
+        return true;
     }
 
     @Override
