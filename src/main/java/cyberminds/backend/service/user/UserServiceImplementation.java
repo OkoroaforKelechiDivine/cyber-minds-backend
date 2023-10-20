@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//http://localhost:9090/api/users/follow
 @Service
 @Slf4j
 public class UserServiceImplementation implements UserService {
@@ -34,29 +33,47 @@ public class UserServiceImplementation implements UserService {
 
         return true;
     }
+    public void searchFriend(String input) throws AppException {
+        AppUser friend = userRepository.findByUsername(input);
+
+        if (friend != null) {
+            return;
+        }
+        friend = userRepository.findByLastName(input);
+        if (friend != null) {
+            return;
+        }
+        friend = userRepository.findByFirstName(input);
+
+        if (friend != null) {
+            return;
+        }
+        throw new AppException("Friend not found");
+    }
 
     @Override
-    public void searchForFriends(AppUser user) {
+    public void unFollowFriend(String userId, String friendId) throws AppException {
+        AppUser currentUser = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        AppUser friendToUnfollow = userRepository.findById(friendId).orElseThrow(() -> new AppException("Friend not found"));
+
+        if (currentUser.getFollowing().contains(friendId)) {
+            currentUser.getFollowing().remove(friendId);
+            friendToUnfollow.getFollowers().remove(userId);
+
+            userRepository.save(currentUser);
+            userRepository.save(friendToUnfollow);
+        } else {
+            throw new AppException("User is not following the friend.");
+        }
+    }
+
+    @Override
+    public void numberOfFollowers(int numberOfFriends) {
 
     }
 
     @Override
-    public void unFollowFriend(AppUser user) {
-
-    }
-
-    @Override
-    public void acceptFriendRequest(AppUser user) {
-
-    }
-
-    @Override
-    public void deleteFriendRequest() {
-
-    }
-
-    @Override
-    public void numberOfFriends(int numberOfFriends) {
+    public void numberOfFollowings(int numberOfFriends) {
 
     }
 
