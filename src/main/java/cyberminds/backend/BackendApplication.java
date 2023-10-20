@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import java.util.Arrays;
 
 @SpringBootApplication
-@Profile("deployment")
+@Profile("local")
 @Slf4j
 @Configuration
 public class BackendApplication {

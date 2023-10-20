@@ -7,7 +7,7 @@ import cyberminds.backend.model.chat.ChatMessage;
 import java.util.List;
 
 public interface ChatMessageService {
-    ChatMessage sendChatMessage(ChatMessageDTO message) throws AppException;
+    ChatMessage sendMessage(ChatMessageDTO message) throws AppException;
     List<ChatMessage> getChatMessages(String senderId, String receiverId);
     List<ChatMessage> getChatMessagesForUser(String userId);
     void deleteChatMessage(String messageId);
