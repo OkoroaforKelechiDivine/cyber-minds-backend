@@ -6,6 +6,7 @@ import cyberminds.backend.dto.request.ChatMessageDTO;
 import cyberminds.backend.dto.response.ResponseDetails;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.service.chat.ChatMessageServiceImplementation;
+import cyberminds.backend.service.user.UserServiceImplementation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -22,21 +23,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/chats")
 @Slf4j
-@CrossOrigin(origins = "true", allowCredentials = "true")
 public class ChatController {
 
     @Autowired
     private ChatMessageServiceImplementation chatService;
-    private static HttpPost getHttpPost(String url) {
+
+    @Autowired
+    private UserServiceImplementation userServiceImplementation;
+
+    private int maliciousCount = 0;
+
+    private static final String VIRUS_TOTAL_API_KEY = "c93fbb4e9e35f87a82ce02e276b7ab4ae85004327c3dc5b7a61b51b95110061a";
+
+    private HttpPost getHttpPost(String url) {
         HttpPost httpPost = new HttpPost("https://www.virustotal.com/api/v3/urls");
-        httpPost.setHeader("x-apikey", "c93fbb4e9e35f87a82ce02e276b7ab4ae85004327c3dc5b7a61b51b95110061a");
+        httpPost.setHeader("x-apikey", VIRUS_TOTAL_API_KEY);
         httpPost.setHeader("accept", "application/json");
         httpPost.setHeader("content-type", "application/x-www-form-urlencoded");
 
@@ -46,7 +52,8 @@ public class ChatController {
         return httpPost;
     }
 
-    public int scanURL(String url) {
+    private int scanURL(String url) throws AppException {
+        String id = null;
         try {
             HttpClient httpClient = HttpClients.createDefault();
             HttpPost httpPost = getHttpPost(url);
@@ -64,65 +71,82 @@ public class ChatController {
             JsonNode dataNode = jsonNode.get("data");
 
             if (dataNode != null && dataNode.has("id")) {
-                String id = dataNode.get("id").asText();
-                log.info("Extracted ID: " + id);
-                byte[] idBytes = id.getBytes(StandardCharsets.UTF_8);
-                String encodedId = Base64.getEncoder().withoutPadding().encodeToString(idBytes);
-                log.info("Encoded ID (without padding): " + encodedId);
+                id = dataNode.get("id").asText();
+                getURLInformation(id);
+                return 200;
             } else {
-                log.warn("The 'id' key is not present in the JSON response or is null.");
+                throw new AppException("The 'id' key is not present in the JSON response or is null.");
             }
-
         } catch (Exception e) {
-            log.error("Error scanning URL with VirusTotal: " + e.getMessage());
+            throw new AppException("Error scanning URL with VirusTotal: " + e.getMessage());
         }
-        return -1;
     }
 
-    private static HttpGet getHttpGet(String url) {
+    private HttpGet getHttpGet(String url) {
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader("x-apikey", "c93fbb4e9e35f87a82ce02e276b7ab4ae85004327c3dc5b7a61b51b95110061a");
+        httpGet.setHeader("x-apikey", VIRUS_TOTAL_API_KEY);
         httpGet.setHeader("accept", "application/json");
         return httpGet;
     }
 
-    public void getURLInformation(String url) {
-        String apiUrl = "https://www.virustotal.com/api/v3/urls/id";
+    private void getURLInformation(String id) throws AppException {
+        String apiUrl = "https://www.virustotal.com/api/v3/analyses/{id}";
+        apiUrl = apiUrl.replace("{id}", id);
+
         HttpClient httpClient = HttpClients.createDefault();
 
         try {
             HttpGet httpGet = getHttpGet(apiUrl);
             HttpResponse response = httpClient.execute(httpGet);
+
             if (response.getStatusLine().getStatusCode() == 200) {
                 String responseBody = EntityUtils.toString(response.getEntity());
-                System.out.println("Response from VirusTotal API:\n" + responseBody);
+                log.info("Response from VirusTotal API:\n" + responseBody);
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+                if (jsonNode.has("data") && jsonNode.get("data").has("attributes") && jsonNode.get("data").get("attributes").has("stats")) {
+                    JsonNode stats = jsonNode.get("data").get("attributes").get("stats");
+                    if (stats.has("malicious")) {
+                        maliciousCount = stats.get("malicious").asInt();
+                        log.info("Malicious" +  maliciousCount);
+                    }
+                }
             } else {
-                System.err.println("Request to VirusTotal API failed with status code: " + response.getStatusLine().getStatusCode());
+                throw new AppException("Request to VirusTotal API failed with status code: " + response.getStatusLine().getStatusCode());
             }
         } catch (Exception e) {
-            // Handle exceptions
-            System.err.println("Error making GET request: " + e.getMessage());
+            throw new AppException("Error making GET request: " + e.getMessage());
         }
     }
 
     @PostMapping("/send-message")
     public ResponseEntity<?> sendMessage(@RequestBody ChatMessageDTO messageDTO) {
+        if (!userServiceImplementation.existsById(messageDTO.getSenderId())) {
+            ResponseDetails errorResponseSender = new ResponseDetails(LocalDateTime.now(), "Sender is not found. Message not sent.", HttpStatus.NOT_FOUND.toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseSender);
+        }
+        if (!userServiceImplementation.existsById(messageDTO.getReceiverId())) {
+            ResponseDetails errorResponseReceiver = new ResponseDetails(LocalDateTime.now(), "Receiver is not found. Message not sent.", HttpStatus.NOT_FOUND.toString());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseReceiver);
+        }
+        if (messageDTO.getSenderId().equals(messageDTO.getReceiverId())) {
+            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Receiver and Sender are the same.", HttpStatus.CONFLICT.toString());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(invalidResponse);
+        }
         try {
             if (chatService.containsURL(messageDTO.getContent())) {
-                log.info("Message contains a URL. Scanning URL with VirusTotal...");
                 int scanResult = scanURL(messageDTO.getContent());
-
                 if (scanResult == 200) {
-                    log.info("URL scan returned 200. Deleting the message and user.");
-                    chatService.deleteMessageAndUser(messageDTO);
-                    ResponseDetails deleteResponse = new ResponseDetails(LocalDateTime.now(), "Message and user deleted.", HttpStatus.OK.toString());
-                    return ResponseEntity.ok(deleteResponse);
-                } else {
-                    log.info("URL scan did not return 200. Message not deleted.");
+                    if (maliciousCount > 1) {
+                        chatService.deleteUser(messageDTO.getSenderId());
+                        ResponseDetails deleteResponse = new ResponseDetails(LocalDateTime.now(), "Malicious content detected. User has been deleted.", HttpStatus.OK.toString());
+                        return ResponseEntity.ok(deleteResponse);
+                    }
                 }
-            } else {
-                log.info("Message does not contain a URL. Saving the message...");
-                chatService.sendMessage(messageDTO);
+                else {
+                    chatService.sendMessage(messageDTO);
+                }
             }
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Message processed successfully.", HttpStatus.OK.toString());
             return ResponseEntity.ok(responseDetails);
@@ -131,5 +155,4 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
         }
     }
-
 }

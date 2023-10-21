@@ -10,5 +10,5 @@ public interface ChatMessageService {
     ChatMessage sendMessage(ChatMessageDTO message) throws AppException;
     List<ChatMessage> getChatMessages(String senderId, String receiverId);
     List<ChatMessage> getChatMessagesForUser(String userId);
-    void deleteChatMessage(String messageId);
+    void deleteUser(String userId) throws AppException;
 }
