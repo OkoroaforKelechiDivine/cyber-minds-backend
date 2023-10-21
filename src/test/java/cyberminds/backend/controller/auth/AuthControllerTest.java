@@ -33,11 +33,11 @@ public class AuthControllerTest {
     @Test
     public void test_createUserAccount() throws Exception {
         RegistrationDTO registrationDTO = new RegistrationDTO();
-        registrationDTO.setFirstName("Ifeoluwa");
-        registrationDTO.setLastName("Rabiu");
-        registrationDTO.setEmail("ifeoluwarabiu6@gmail.com");
+        registrationDTO.setFirstName("Joshua");
+        registrationDTO.setLastName("Aduroja");
+        registrationDTO.setEmail("joshuaaduroja@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
-        registrationDTO.setGender(Gender.FEMALE.toString());
+        registrationDTO.setGender(Gender.MALE.toString());
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)

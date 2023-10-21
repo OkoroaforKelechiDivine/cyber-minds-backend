@@ -14,6 +14,10 @@ public class UserServiceImplementation implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public Boolean existsById(String id) {
+        return userRepository.existsById(id);
+    }
     public boolean followFriend(FriendsDTO friendsDTO) throws AppException {
         String userId = friendsDTO.getUserId();
         String friendId = friendsDTO.getFriendId();
@@ -30,7 +34,6 @@ public class UserServiceImplementation implements UserService {
         } else {
             throw new AppException("User is already following the friend.");
         }
-
         return true;
     }
     public void searchFriend(String input) throws AppException {
