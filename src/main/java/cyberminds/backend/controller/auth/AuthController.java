@@ -29,11 +29,11 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException {
         if (authServiceImplementation.existByEmail(user.getEmail())) {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(responseDetails);
+            return ResponseEntity.status(409).body(responseDetails);
         }
         authServiceImplementation.createUser(user);
         ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDetails);
+        return ResponseEntity.status(201).body(responseDetails);
     }
 
     @PostMapping("/forgot-password")
