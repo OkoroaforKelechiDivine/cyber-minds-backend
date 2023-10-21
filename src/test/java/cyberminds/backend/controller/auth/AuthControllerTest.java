@@ -38,8 +38,8 @@ public class AuthControllerTest {
         registrationDTO.setEmail("joshuaaduroja@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
         registrationDTO.setGender(Gender.MALE.toString());
-//        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
+//        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registrationDTO)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
