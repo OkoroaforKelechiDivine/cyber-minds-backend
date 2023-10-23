@@ -37,7 +37,7 @@ public class UserServiceImplementation implements UserService {
         return true;
     }
     public void searchFriend(String input) throws AppException {
-        AppUser friend = userRepository.findByUsername(input);
+        AppUser friend = userRepository.findByFirstName(input);
 
         if (friend != null) {
             return;

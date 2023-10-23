@@ -140,8 +140,8 @@ public class ChatController {
                 if (scanResult == 200) {
                     if (maliciousCount > 1) {
                         chatService.deleteUser(messageDTO.getSenderId());
-                        ResponseDetails deleteResponse = new ResponseDetails(LocalDateTime.now(), "Malicious content detected. User has been deleted.", HttpStatus.OK.toString());
-                        return ResponseEntity.ok(deleteResponse);
+                        ResponseDetails deleteResponse = new ResponseDetails(LocalDateTime.now(), "Malicious content detected. User has been deleted.", HttpStatus.ALREADY_REPORTED.toString());
+                        return ResponseEntity.status(208).body(deleteResponse);
                     }
                 }
                 else {

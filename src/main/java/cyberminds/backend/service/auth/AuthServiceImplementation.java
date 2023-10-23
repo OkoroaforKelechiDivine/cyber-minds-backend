@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class AuthServiceImplementation implements AuthService{
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
     private JavaMailSender javaMailSender;
