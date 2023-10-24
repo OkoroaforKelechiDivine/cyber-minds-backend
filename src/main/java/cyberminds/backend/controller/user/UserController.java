@@ -35,16 +35,17 @@ public class UserController {
         }
     }
 
-    @GetMapping("/all-users")
+    @GetMapping("/all")
     public ResponseEntity<?> getAllUsers() {
         try {
             List<AppUser> users = userService.getAllUsers();
-            return ResponseEntity.ok(users);
+            return ResponseEntity.status(200).body(users);
         } catch (Exception ex) {
             ResponseDetails errorDetails = new ResponseDetails(LocalDateTime.now(), ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.toString());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
+            return ResponseEntity.status(500).body(errorDetails);
         }
     }
+
 
     @GetMapping("/search-friend")
     public ResponseEntity<?> searchFriend(@RequestParam String username) {
