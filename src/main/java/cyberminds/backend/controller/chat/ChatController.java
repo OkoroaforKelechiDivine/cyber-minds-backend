@@ -92,13 +92,10 @@ public class ChatController {
     private void getURLInformation(String id) throws AppException {
         String apiUrl = "https://www.virustotal.com/api/v3/analyses/{id}";
         apiUrl = apiUrl.replace("{id}", id);
-
         HttpClient httpClient = HttpClients.createDefault();
-
         try {
             HttpGet httpGet = getHttpGet(apiUrl);
             HttpResponse response = httpClient.execute(httpGet);
-
             if (response.getStatusLine().getStatusCode() == 200) {
                 String responseBody = EntityUtils.toString(response.getEntity());
                 log.info("Response from VirusTotal API:\n" + responseBody);
@@ -121,17 +118,21 @@ public class ChatController {
     }
 
     @PostMapping("/send-message")
-    public ResponseEntity<?> sendMessage(@RequestBody ChatMessageDTO messageDTO) {
+    public ResponseEntity<?> sendMessage(@RequestBody ChatMessageDTO messageDTO) throws AppException {
         if (!userServiceImplementation.existsById(messageDTO.getSenderId())) {
             ResponseDetails errorResponseSender = new ResponseDetails(LocalDateTime.now(), "Sender is not found. Message not sent.", HttpStatus.NOT_FOUND.toString());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseSender);
+            return ResponseEntity.status(404).body(errorResponseSender);
         }
         if (!userServiceImplementation.existsById(messageDTO.getReceiverId())) {
             ResponseDetails errorResponseReceiver = new ResponseDetails(LocalDateTime.now(), "Receiver is not found. Message not sent.", HttpStatus.NOT_FOUND.toString());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponseReceiver);
+            return ResponseEntity.status(404).body(errorResponseReceiver);
         }
         if (messageDTO.getSenderId().equals(messageDTO.getReceiverId())) {
             ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Receiver and Sender are the same.", HttpStatus.CONFLICT.toString());
+            return ResponseEntity.status(409).body(invalidResponse);
+        }
+        if (!userServiceImplementation.usersAreFollowingEachOther(messageDTO.getSenderId(), messageDTO.getReceiverId())) {
+            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Users are not following each other, so they can not chat.", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(invalidResponse);
         }
         try {

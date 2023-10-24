@@ -62,12 +62,11 @@ public class AuthServiceImplementation implements AuthService{
             throw new AppException("User password is too weak");
         }
         AppUser appUser = new AppUser();
-        modelMapper.map(user, appUser);
         appUser.setCreatedDate(LocalDateTime.now().toString());
         appUser.setGender(Gender.valueOf(user.getGender()));
         appUser.setEmail(user.getEmail());
         appUser.setPassword(encryptPassword(user.getPassword()));
-
+        modelMapper.map(appUser, user);
         userRepository.save(appUser);
     }
 

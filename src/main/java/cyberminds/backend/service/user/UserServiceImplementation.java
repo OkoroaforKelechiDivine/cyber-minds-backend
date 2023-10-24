@@ -18,17 +18,24 @@ public class UserServiceImplementation implements UserService {
     public Boolean existsById(String id) {
         return userRepository.existsById(id);
     }
+
+    public boolean usersAreFollowingEachOther(String userId, String friendId) throws AppException {
+        AppUser currentUser = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
+        AppUser friend = userRepository.findById(friendId).orElseThrow(() -> new AppException("User not found"));
+        if (currentUser != null && friend != null) {
+            return currentUser.getFollowing().contains(friendId) && friend.getFollowers().contains(userId);
+        }
+        return false;
+    }
+
     public boolean followFriend(FriendsDTO friendsDTO) throws AppException {
         String userId = friendsDTO.getUserId();
         String friendId = friendsDTO.getFriendId();
-
         AppUser currentUser = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         AppUser friendToFollow = userRepository.findById(friendId).orElseThrow(() -> new AppException("Friend not found"));
-
         if (!currentUser.getFollowing().contains(friendId)) {
             currentUser.getFollowing().add(friendId);
             friendToFollow.getFollowers().add(userId);
-
             userRepository.save(currentUser);
             userRepository.save(friendToFollow);
         } else {
@@ -38,7 +45,6 @@ public class UserServiceImplementation implements UserService {
     }
     public void searchFriend(String input) throws AppException {
         AppUser friend = userRepository.findByFirstName(input);
-
         if (friend != null) {
             return;
         }
@@ -58,11 +64,9 @@ public class UserServiceImplementation implements UserService {
     public void unFollowFriend(String userId, String friendId) throws AppException {
         AppUser currentUser = userRepository.findById(userId).orElseThrow(() -> new AppException("User not found"));
         AppUser friendToUnfollow = userRepository.findById(friendId).orElseThrow(() -> new AppException("Friend not found"));
-
         if (currentUser.getFollowing().contains(friendId)) {
             currentUser.getFollowing().remove(friendId);
             friendToUnfollow.getFollowers().remove(userId);
-
             userRepository.save(currentUser);
             userRepository.save(friendToUnfollow);
         } else {
