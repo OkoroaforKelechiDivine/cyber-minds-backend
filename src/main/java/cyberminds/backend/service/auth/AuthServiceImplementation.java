@@ -62,6 +62,8 @@ public class AuthServiceImplementation implements AuthService{
             throw new AppException("User password is too weak");
         }
         AppUser appUser = new AppUser();
+        appUser.setFirstName(user.getFirstName());
+        appUser.setLastName(user.getLastName());
         appUser.setCreatedDate(LocalDateTime.now().toString());
         appUser.setGender(Gender.valueOf(user.getGender()));
         appUser.setEmail(user.getEmail());
