@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class UserServiceImplementation implements UserService {
@@ -72,6 +74,11 @@ public class UserServiceImplementation implements UserService {
         } else {
             throw new AppException("User is not following the friend.");
         }
+    }
+
+    @Override
+    public List<AppUser> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
