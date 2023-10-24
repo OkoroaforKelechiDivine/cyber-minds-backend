@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/auths")
 @Slf4j
-@CrossOrigin(origins = "*", allowCredentials = "*")
 public class AuthController {
 
     @Autowired
