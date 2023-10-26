@@ -1,6 +1,5 @@
 package cyberminds.backend.dto.request;
 
-import cyberminds.backend.model.user.Gender;
 import lombok.Data;
 
 @Data

@@ -49,18 +49,6 @@ public class AuthServiceImplementation implements AuthService{
     }
     @Override
     public void createUser(RegistrationDTO user) throws AppException {
-        if (Objects.equals(user.getEmail(), "")){
-            throw new AppException("User email is empty.");
-        }
-        if (!isValidEmail(user.getEmail())){
-            throw new AppException("Invalid user email.");
-        }
-        if (!isStrongPassword(user.getPassword())){
-            if (user.getPassword().length() < 5){
-                throw new AppException("User password should not be less than 5 characters.");
-            }
-            throw new AppException("User password is too weak");
-        }
         AppUser appUser = new AppUser();
         appUser.setFirstName(user.getFirstName());
         appUser.setLastName(user.getLastName());
