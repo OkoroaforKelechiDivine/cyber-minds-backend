@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auths")
@@ -30,9 +32,17 @@ public class AuthController {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(409).body(responseDetails);
         }
-        authServiceImplementation.createUser(user);
-        ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
-        return ResponseEntity.status(201).body(responseDetails);
+        String userId = authServiceImplementation.createUser(user);
+        if (userId != null) {
+            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", responseDetails.getMessage());
+            response.put("id", userId);
+            return ResponseEntity.status(201).body(response);
+        } else {
+            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User creation failed", HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            return ResponseEntity.status(500).body(responseDetails);
+        }
     }
 
     @PostMapping("/forgot-password")
