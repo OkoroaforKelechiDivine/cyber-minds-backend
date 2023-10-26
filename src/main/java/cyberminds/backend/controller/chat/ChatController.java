@@ -131,10 +131,10 @@ public class ChatController {
             ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Receiver and Sender are the same.", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(409).body(invalidResponse);
         }
-        if (!userServiceImplementation.usersAreFollowingEachOther(messageDTO.getSenderId(), messageDTO.getReceiverId())) {
-            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Users are not following each other, so they can not chat.", HttpStatus.CONFLICT.toString());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(invalidResponse);
-        }
+//        if (!userServiceImplementation.usersAreFollowingEachOther(messageDTO.getSenderId(), messageDTO.getReceiverId())) {
+//            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Users are not following each other, so they can not chat.", HttpStatus.CONFLICT.toString());
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(invalidResponse);
+//        }
         try {
             if (chatService.containsURL(messageDTO.getContent())) {
                 int scanResult = scanURL(messageDTO.getContent());
