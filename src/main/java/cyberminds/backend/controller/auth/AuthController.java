@@ -33,7 +33,6 @@ public class AuthController {
             return ResponseEntity.status(409).body(responseDetails);
         }
         String userId = authServiceImplementation.createUser(user);
-        System.out.println("This is the id " + userId);
         if (userId != null) {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
             Map<String, Object> response = new HashMap<>();
