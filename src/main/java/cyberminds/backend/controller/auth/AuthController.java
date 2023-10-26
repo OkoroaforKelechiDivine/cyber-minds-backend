@@ -46,7 +46,6 @@ public class AuthController {
         }
     }
 
-
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws MessagingException {
         if (!authServiceImplementation.existByEmail(forgotPasswordRequestDTO.getEmail())){
