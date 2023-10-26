@@ -31,9 +31,6 @@ public class ProfileServiceImplementation implements ProfileService {
     @Override
     @Transactional
     public void createProfile(ProfileDTO profileDTO, String userId) throws AppException {
-        if (profileDTO.getDateOfBirth() == null) {
-            throw new AppException("You must provide a date of birth");
-        }
         Profile profile = new Profile();
         profile.setDateOfBirth(profileDTO.getDateOfBirth());
         profile.setProfileImageUrl(profileDTO.getProfileImageUrl());
@@ -42,7 +39,6 @@ public class ProfileServiceImplementation implements ProfileService {
         profile.setUsername(profileDTO.getUsername());
         modelMapper.map(profile, profileDTO);
         AppUser appUser = userRepository.findUserById(userId);
-
         if (appUser == null) {
             throw new AppException("User not found");
         }

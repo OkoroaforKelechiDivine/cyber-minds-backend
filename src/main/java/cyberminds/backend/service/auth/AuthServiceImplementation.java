@@ -48,7 +48,7 @@ public class AuthServiceImplementation implements AuthService{
         return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
     }
     @Override
-    public void createUser(RegistrationDTO user) throws AppException {
+    public String createUser(RegistrationDTO user) throws AppException {
         AppUser appUser = new AppUser();
         appUser.setFirstName(user.getFirstName());
         appUser.setLastName(user.getLastName());
@@ -58,6 +58,7 @@ public class AuthServiceImplementation implements AuthService{
         appUser.setPassword(encryptPassword(user.getPassword()));
         modelMapper.map(appUser, user);
         userRepository.save(appUser);
+        return appUser.getId();
     }
 
     @Override
