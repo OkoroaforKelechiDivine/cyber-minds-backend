@@ -6,7 +6,7 @@ import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.LoginDTO;
 import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
-import cyberminds.backend.model.user.Gender;
+import cyberminds.backend.model.constants.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

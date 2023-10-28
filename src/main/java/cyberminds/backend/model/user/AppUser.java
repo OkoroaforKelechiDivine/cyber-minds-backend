@@ -1,5 +1,8 @@
 package cyberminds.backend.model.user;
 
+import cyberminds.backend.model.constants.Gender;
+import cyberminds.backend.model.constants.Role;
+import cyberminds.backend.model.constants.UserStatus;
 import cyberminds.backend.model.profile.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Data;

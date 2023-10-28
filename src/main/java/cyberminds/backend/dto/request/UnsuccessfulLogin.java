@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UnsuccessfulLogin {
+
     private LocalDateTime timestamp;
 
     private String message;

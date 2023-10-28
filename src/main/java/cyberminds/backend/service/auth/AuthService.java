@@ -7,7 +7,7 @@ import javax.mail.MessagingException;
 
 public interface AuthService {
 
-    String createUser(RegistrationDTO blogger) throws AppException;
+    String createUser(RegistrationDTO blogger);
     void resetPassword(String email, String newPassword, String confirmPassword) throws AppException;
     void forgotPassword(String email) throws MessagingException;
 }
