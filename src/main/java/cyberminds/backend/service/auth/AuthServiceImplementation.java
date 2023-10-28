@@ -3,7 +3,7 @@ package cyberminds.backend.service.auth;
 import cyberminds.backend.dto.request.RegistrationDTO;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
-import cyberminds.backend.model.user.Gender;
+import cyberminds.backend.model.constants.Gender;
 import cyberminds.backend.repository.user.UserRepository;
 import cyberminds.backend.service.utils.OTPGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Service
@@ -48,7 +47,7 @@ public class AuthServiceImplementation implements AuthService{
         return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
     }
     @Override
-    public String createUser(RegistrationDTO user) throws AppException {
+    public String createUser(RegistrationDTO user) {
         AppUser appUser = new AppUser();
         appUser.setFirstName(user.getFirstName());
         appUser.setLastName(user.getLastName());

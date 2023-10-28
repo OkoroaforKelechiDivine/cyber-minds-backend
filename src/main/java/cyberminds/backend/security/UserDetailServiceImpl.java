@@ -1,6 +1,6 @@
 package cyberminds.backend.security;
 
-import cyberminds.backend.model.user.Role;
+import cyberminds.backend.model.constants.Role;
 import cyberminds.backend.model.user.AppUser;
 import cyberminds.backend.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

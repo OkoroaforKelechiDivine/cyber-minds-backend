@@ -6,7 +6,7 @@ import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.LoginDTO;
 import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
-import cyberminds.backend.model.user.Gender;
+import cyberminds.backend.model.constants.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class AuthControllerTest {
     @Test
     public void test_userLogin() throws Exception {
         LoginDTO loginRequest = new LoginDTO();
-        loginRequest.setEmail("okoroaforkelechi123@gmail.com");
+        loginRequest.setEmail("okoroaforchinwendu@gmail.com");
         loginRequest.setPassword("StrongPassword123@");
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")

@@ -1,7 +1,6 @@
 package cyberminds.backend.model.profile;
 
 
-import cyberminds.backend.model.user.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
