@@ -132,8 +132,8 @@ public class ChatController {
             return ResponseEntity.status(409).body(invalidResponse);
         }
         if (!userServiceImplementation.usersAreFollowingEachOther(messageDTO.getSenderId(), messageDTO.getReceiverId())) {
-            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Users are not following each other, so they can not chat.", HttpStatus.CONFLICT.toString());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(invalidResponse);
+            ResponseDetails invalidResponse = new ResponseDetails(LocalDateTime.now(), "Users are not following each other, so they can not chat.", HttpStatus.NOT_ACCEPTABLE.toString());
+            return ResponseEntity.status(406).body(invalidResponse);
         }
         try {
             if (chatService.containsURL(messageDTO.getContent())) {
