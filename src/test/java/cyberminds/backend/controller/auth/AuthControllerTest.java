@@ -49,7 +49,7 @@ public class AuthControllerTest {
     @Test
     public void test_userLogin() throws Exception {
         LoginDTO loginRequest = new LoginDTO();
-        loginRequest.setEmail("okoroaforkelechi123@gmail.com");
+        loginRequest.setEmail("okoroaforchinwendu@gmail.com");
         loginRequest.setPassword("StrongPassword123@");
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
