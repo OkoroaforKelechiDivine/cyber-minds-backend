@@ -139,7 +139,7 @@ public class ChatController {
             if (chatService.containsURL(messageDTO.getContent())) {
                 int scanResult = scanURL(messageDTO.getContent());
                 if (scanResult == 200) {
-                    if (maliciousCount > 1) {
+                    if (maliciousCount > 0) {
                         chatService.deleteUser(messageDTO.getSenderId());
                         ResponseDetails deleteResponse = new ResponseDetails(LocalDateTime.now(), "Malicious content detected. User has been deleted.", HttpStatus.ALREADY_REPORTED.toString());
                         return ResponseEntity.status(208).body(deleteResponse);
