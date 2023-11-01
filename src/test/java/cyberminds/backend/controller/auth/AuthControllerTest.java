@@ -37,7 +37,6 @@ public class AuthControllerTest {
         registrationDTO.setLastName("Okoroafor");
         registrationDTO.setEmail("okoroaforkelechi@gmail.com");
         registrationDTO.setPassword("StrongPassword123@");
-        registrationDTO.setGender(Gender.MALE.toString());
         mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)

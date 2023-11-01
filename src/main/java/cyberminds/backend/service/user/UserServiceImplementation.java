@@ -30,16 +30,6 @@ public class UserServiceImplementation implements UserService {
         return false;
     }
 
-//    public int countFollowers(String userId) {
-//        AppUser user = userRepository.findById(userId).orElse(null);
-//        if (user != null) {
-//            return user.getFollowers().size();
-//        } else {
-//            return 0;
-//        }
-//    }
-
-
     public boolean followFriend(FriendsDTO friendsDTO) throws AppException {
         String userId = friendsDTO.getUserId();
         String friendId = friendsDTO.getFriendId();
