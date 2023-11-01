@@ -52,7 +52,6 @@ public class AuthServiceImplementation implements AuthService{
         appUser.setFirstName(user.getFirstName());
         appUser.setLastName(user.getLastName());
         appUser.setCreatedDate(LocalDateTime.now().toString());
-        appUser.setGender(Gender.valueOf(user.getGender()));
         appUser.setEmail(user.getEmail());
         appUser.setPassword(encryptPassword(user.getPassword()));
         modelMapper.map(appUser, user);
