@@ -31,19 +31,19 @@ public class ProfileServiceImplementation implements ProfileService {
     @Override
     @Transactional
     public void createProfile(ProfileDTO profileDTO, String userId) throws AppException {
-        Profile profile = new Profile();
-        profile.setDateOfBirth(profileDTO.getDateOfBirth());
-        profile.setProfileImageUrl(profileDTO.getProfileImageUrl());
-        profile.setBio(profileDTO.getBio());
-        profile.setHobbies(profileDTO.getHobbies());
-        profile.setUsername(profileDTO.getUsername());
-        modelMapper.map(profile, profileDTO);
-        AppUser appUser = userRepository.findUserById(userId);
-        if (appUser == null) {
-            throw new AppException("User not found");
-        }
-        profileRepository.save(profile);
-        appUser.setProfile(profile);
-        userRepository.save(appUser);
+//        Profile profile = new Profile();
+//        profile.setDateOfBirth(profileDTO.getDateOfBirth());
+//        profile.setProfileImageUrl(profileDTO.getProfileImageUrl());
+//        profile.setBio(profileDTO.getBio());
+//        profile.setHobbies(profileDTO.getHobbies());
+//        profile.setUsername(profileDTO.getUsername());
+//        modelMapper.map(profile, profileDTO);
+//        AppUser appUser = userRepository.findUserById(userId);
+//        if (appUser == null) {
+//            throw new AppException("User not found");
+//        }
+//        profileRepository.save(profile);
+//        appUser.setProfile(profile);
+//        userRepository.save(appUser);
     }
 }
