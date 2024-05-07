@@ -9,7 +9,6 @@ import cyberminds.backend.service.utils.OTPGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
 public class AuthServiceImplementation implements AuthService{
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     ModelMapper modelMapper = new ModelMapper();
     private String encryptPassword(String password) {
