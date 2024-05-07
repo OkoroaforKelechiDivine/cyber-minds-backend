@@ -35,7 +35,7 @@ public class AuthControllerTest {
         RegistrationDTO registrationDTO = new RegistrationDTO();
         registrationDTO.setFirstName("Joshua");
         registrationDTO.setLastName("Aduroja");
-        registrationDTO.setEmail("joshuaaduroja@gmail.com");
+        registrationDTO.setPhoneNumber("+2349152624528");
         registrationDTO.setPassword("StrongPassword123@");
         registrationDTO.setGender(Gender.MALE.toString());
         mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
@@ -62,7 +62,7 @@ public class AuthControllerTest {
     @Test
     public void test_forgotPassword() throws Exception {
         ForgotPasswordRequestDTO forgotPasswordRequest = new ForgotPasswordRequestDTO();
-        forgotPasswordRequest.setEmail("okorrkelechi123@gmail.com");
+        forgotPasswordRequest.setPhoneNumber("+2349152624528");
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/forgot-password")
                         .contentType(MediaType.APPLICATION_JSON)
