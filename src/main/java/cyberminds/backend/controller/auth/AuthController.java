@@ -24,7 +24,7 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private AuthServiceImplementation authServiceImplementation;
+    AuthServiceImplementation authServiceImplementation;
 
     @PostMapping("/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException {

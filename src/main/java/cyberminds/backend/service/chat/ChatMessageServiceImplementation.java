@@ -41,6 +41,7 @@ public class ChatMessageServiceImplementation implements ChatMessageService {
         Matcher matcher = pattern.matcher(text);
         return matcher.find();
     }
+
     @Override
     public ChatMessage sendMessage(ChatMessageDTO message) throws AppException {
         if (message != null && !message.getContent().isEmpty()) {
