@@ -6,7 +6,7 @@ import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.LoginDTO;
 import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
-import cyberminds.backend.model.constants.Gender;
+import cyberminds.backend.model.user.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,11 @@ public class AuthControllerTest {
     @Test
     public void test_createUserAccount() throws Exception {
         RegistrationDTO registrationDTO = new RegistrationDTO();
-        registrationDTO.setFirstName("Kelechi");
-        registrationDTO.setLastName("Okoroafor");
-        registrationDTO.setEmail("okoroaforkelechi@gmail.com");
+        registrationDTO.setFirstName("Joshua");
+        registrationDTO.setLastName("Aduroja");
+        registrationDTO.setPhoneNumber("+2349152624528");
         registrationDTO.setPassword("StrongPassword123@");
+        registrationDTO.setGender(Gender.MALE.toString());
         mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/create")
 //        mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -48,7 +49,7 @@ public class AuthControllerTest {
     @Test
     public void test_userLogin() throws Exception {
         LoginDTO loginRequest = new LoginDTO();
-        loginRequest.setEmail("okoroaforchinwendu@gmail.com");
+        loginRequest.setEmail("okoroaforkelechi123@gmail.com");
         loginRequest.setPassword("StrongPassword123@");
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/login")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/login")
@@ -61,7 +62,7 @@ public class AuthControllerTest {
     @Test
     public void test_forgotPassword() throws Exception {
         ForgotPasswordRequestDTO forgotPasswordRequest = new ForgotPasswordRequestDTO();
-        forgotPasswordRequest.setEmail("okorrkelechi123@gmail.com");
+        forgotPasswordRequest.setPhoneNumber("+2349152624528");
 //        mockMvc.perform(MockMvcRequestBuilders.post("https://cyber-mind-deploy.onrender.com/api/auths/forgot-password")
         mockMvc.perform(MockMvcRequestBuilders.post("/api/auths/forgot-password")
                         .contentType(MediaType.APPLICATION_JSON)
