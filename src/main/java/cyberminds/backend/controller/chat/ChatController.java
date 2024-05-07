@@ -101,7 +101,6 @@ public class ChatController {
                 log.info("Response from VirusTotal API:\n" + responseBody);
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
-
                 if (jsonNode.has("data") && jsonNode.get("data").has("attributes") && jsonNode.get("data").get("attributes").has("stats")) {
                     JsonNode stats = jsonNode.get("data").get("attributes").get("stats");
                     if (stats.has("malicious")) {
