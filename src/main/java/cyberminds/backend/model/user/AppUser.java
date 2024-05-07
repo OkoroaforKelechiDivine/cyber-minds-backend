@@ -1,9 +1,5 @@
 package cyberminds.backend.model.user;
 
-import cyberminds.backend.model.constants.Gender;
-import cyberminds.backend.model.constants.Role;
-import cyberminds.backend.model.constants.UserStatus;
-import cyberminds.backend.model.profile.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +17,10 @@ public class AppUser {
     @Id
     private String id;
 
+    private String username;
+
+    private String profilePictureUrl;
+
     private String firstName;
 
     private Gender gender;
@@ -33,9 +33,9 @@ public class AppUser {
 
     private Role role;
 
-    private Profile profile;
-
     private String email;
+
+    private String phoneNumber;
 
     private Set<String> following = new HashSet<>();
 
