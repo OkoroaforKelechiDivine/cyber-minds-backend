@@ -25,8 +25,6 @@ public class AuthServiceImplementation implements AuthService{
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
     ModelMapper modelMapper = new ModelMapper();
     private String encryptPassword(String password) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
