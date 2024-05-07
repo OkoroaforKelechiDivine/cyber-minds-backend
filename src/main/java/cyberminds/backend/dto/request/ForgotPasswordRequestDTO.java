@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ForgotPasswordRequestDTO {
 
-    private String email;
+    private String phoneNumber;
 }

@@ -35,7 +35,7 @@ public class AppUser {
 
     private String email;
 
-    private String phoneNNumber;
+    private String phoneNumber;
 
     private Set<String> following = new HashSet<>();
 

@@ -10,12 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -34,26 +32,31 @@ public class AuthServiceImplementation implements AuthService{
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(password);
     }
-    public Boolean existByEmail(String email){
-        return userRepository.existsByEmail(email);
+
+    public Boolean existByPhoneNumber(String phoneNumber){
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-
-    private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-    private boolean isValidEmail(String email) {
-        return EMAIL_PATTERN.matcher(email).matches();
+    private boolean validPhoneNumber(String phoneNumber) {
+        String phoneRegex = "^\\+234\\d{10}$";
+        Pattern pattern = Pattern.compile(phoneRegex);
+        return pattern.matcher(phoneNumber).matches();
     }
+
+
     private boolean isStrongPassword(String password) {
-        return Pattern.compile(PASSWORD_REGEX).matcher(password).matches();
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+        Pattern pattern = Pattern.compile(passwordRegex);
+        return pattern.matcher(password).matches();
     }
+
     @Override
     public void createUser(RegistrationDTO user) throws AppException {
-        if (Objects.equals(user.getEmail(), "")){
-            throw new AppException("User email is empty.");
+        if (Objects.equals(user.getPhoneNumber(), "")){
+            throw new AppException("User phone number is empty.");
         }
-        if (!isValidEmail(user.getEmail())){
-            throw new AppException("Invalid user email.");
+        if (!validPhoneNumber(user.getPhoneNumber())){
+            throw new AppException("Invalid user phone number.");
         }
         if (!isStrongPassword(user.getPassword())){
             if (user.getPassword().length() < 5){
@@ -65,36 +68,30 @@ public class AuthServiceImplementation implements AuthService{
         modelMapper.map(user, appUser);
         appUser.setCreatedDate(LocalDateTime.now().toString());
         appUser.setGender(Gender.valueOf(user.getGender()));
-        appUser.setEmail(user.getEmail());
+        appUser.setPhoneNumber(user.getPhoneNumber());
         appUser.setPassword(encryptPassword(user.getPassword()));
 
         userRepository.save(appUser);
     }
 
     @Override
-    public void forgotPassword(String email) throws MessagingException {
-        if (!isValidEmail(email)) {
-            throw new MessagingException("Invalid user email.");
+    public void forgotPassword(String phoneNumber) throws MessagingException {
+        if (!validPhoneNumber(phoneNumber)) {
+            throw new MessagingException("Invalid user phone number.");
         }
-        if (existByEmail(email)) {
+        if (existByPhoneNumber(phoneNumber)) {
             String otp = OTPGenerator.generateOTP();
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(email);
-            helper.setSubject("Forgot Password OTP");
-            helper.setText("Your OTP for resetting the password is: " + otp);
-            javaMailSender.send(message);
-            log.info("This is the OTP -->{}", otp);
+            log.info("This is the OTP for phone number {}: {}", phoneNumber, otp);
         }
     }
     @Override
-    public void resetPassword(String email, String newPassword, String confirmPassword) throws AppException {
-        if (!isValidEmail(email)) {
-            throw new AppException("Invalid user email.");
+    public void resetPassword(String phoneNumber, String newPassword, String confirmPassword) throws AppException {
+        if (!validPhoneNumber(phoneNumber)) {
+            throw new AppException("Invalid user phone number.");
         }
-        AppUser user = userRepository.findByEmail(email);
+        AppUser user = userRepository.findByPhoneNumber(phoneNumber);
         if (user == null) {
-            throw new AppException("User with email '" + email + "' does not exist.");
+            throw new AppException("User with phone number '" + phoneNumber + "' does not exist.");
         }
         if (!newPassword.equals(confirmPassword)) {
             throw new AppException("New password and confirm password do not match.");

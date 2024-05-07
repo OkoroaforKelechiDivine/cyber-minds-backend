@@ -27,8 +27,8 @@ public class AuthController {
 
     @PostMapping("/create")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException {
-        if (authServiceImplementation.existByEmail(user.getEmail())) {
-            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this email already exists", HttpStatus.CONFLICT.toString());
+        if (authServiceImplementation.existByPhoneNumber(user.getPhoneNumber())) {
+            ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this phone number already exists", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(409).body(responseDetails);
         }
         authServiceImplementation.createUser(user);
@@ -38,11 +38,11 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws MessagingException {
-        if (!authServiceImplementation.existByEmail(forgotPasswordRequestDTO.getEmail())){
+        if (!authServiceImplementation.existByPhoneNumber(forgotPasswordRequestDTO.getPhoneNumber())){
             ResponseDetails userDoesNotExist = new ResponseDetails(LocalDateTime.now(), "User with that email does not exist", HttpStatus.NOT_FOUND.toString());
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(userDoesNotExist);
         }
-        authServiceImplementation.forgotPassword(forgotPasswordRequestDTO.getEmail());
+        authServiceImplementation.forgotPassword(forgotPasswordRequestDTO.getPhoneNumber());
         ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "OTP sent to your email for password reset.", HttpStatus.OK.toString());
         return ResponseEntity.ok(responseDetails);
     }
