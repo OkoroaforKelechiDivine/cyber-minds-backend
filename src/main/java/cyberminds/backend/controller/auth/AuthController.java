@@ -1,26 +1,32 @@
 package cyberminds.backend.controller.auth;
 
-import cyberminds.backend.dto.request.ForgotPasswordRequestDTO;
 import cyberminds.backend.dto.request.ResetPasswordDTO;
 import cyberminds.backend.dto.request.RegistrationDTO;
+import cyberminds.backend.dto.request.VerificationCodeDTO;
 import cyberminds.backend.dto.response.ResponseDetails;
 import cyberminds.backend.exception.AppException;
 import cyberminds.backend.service.auth.AuthServiceImplementation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auths")
 @Slf4j
 @CrossOrigin(origins = "true", allowCredentials = "true")
 public class AuthController {
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Autowired
     AuthServiceImplementation authServiceImplementation;
@@ -32,19 +38,48 @@ public class AuthController {
             return ResponseEntity.status(409).body(responseDetails);
         }
         authServiceImplementation.createUser(user);
+        authServiceImplementation.sendVerificationCode(user.getPhoneNumber());
         ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "Your account has been created successfully", HttpStatus.CREATED.toString());
         return ResponseEntity.status(201).body(responseDetails);
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) throws MessagingException {
-        if (!authServiceImplementation.existByPhoneNumber(forgotPasswordRequestDTO.getPhoneNumber())){
-            ResponseDetails userDoesNotExist = new ResponseDetails(LocalDateTime.now(), "User with that email does not exist", HttpStatus.NOT_FOUND.toString());
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(userDoesNotExist);
+    @PostMapping("/send-verification-code")
+    public void sendVerificationCode(@Valid @RequestBody VerificationCodeDTO verificationCodeDTO) throws MessagingException {
+        String verificationCode = authServiceImplementation.generateVerificationCode();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String apiKey = "TLSeWNuacjmuln6MGPFSc7ytnt8kY5CBjOzBe9ubvWc12JPLEIwlJFpm4R39b7";
+
+        // Construct the request body
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("to", verificationCodeDTO.getPhoneNumber());
+        requestBody.put("from", "SafeChat");
+        requestBody.put("sms", "Your verification code is: " + verificationCode);
+        requestBody.put("type", "plain");
+        requestBody.put("channel", "generic");
+        requestBody.put("api_key", apiKey);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // Send the request to Termii API
+        ResponseEntity<Map> responseEntity = restTemplate.exchange(
+                "https://api.ng.termii.com/api/sms/send",
+                HttpMethod.POST,
+                requestEntity,
+                Map.class);
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            Map responseBody = responseEntity.getBody();
+            if (responseBody != null && responseBody.containsKey("message") && responseBody.get("message").equals("Successfully Sent")) {
+                log.info("Verification code sent successfully to {}", verificationCodeDTO.getPhoneNumber());
+            } else {
+                throw new MessagingException("Failed to send verification code. Response: " + responseBody);
+            }
+        } else {
+            throw new MessagingException("Failed to send verification code. HTTP Status: " + responseEntity.getStatusCode());
         }
-        authServiceImplementation.forgotPassword(forgotPasswordRequestDTO.getPhoneNumber());
-        ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "OTP sent to your email for password reset.", HttpStatus.OK.toString());
-        return ResponseEntity.ok(responseDetails);
     }
 
     @PostMapping("/reset-password")

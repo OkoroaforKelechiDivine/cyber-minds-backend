@@ -5,16 +5,17 @@ import cyberminds.backend.exception.AppException;
 import cyberminds.backend.model.user.AppUser;
 import cyberminds.backend.model.user.Gender;
 import cyberminds.backend.repository.user.UserRepository;
-import cyberminds.backend.service.utils.OTPGenerator;
+import cyberminds.backend.service.configuration.twilio.TwilioConfiguration;
+import cyberminds.backend.service.twilio.TwilioService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Random;
 import java.util.regex.Pattern;
 
 @Service
@@ -32,6 +33,12 @@ public class AuthServiceImplementation implements AuthService{
 
     public Boolean existByPhoneNumber(String phoneNumber){
         return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    public static String generateVerificationCode() {
+        Random random = new Random();
+        int code = random.nextInt(9000) + 1000;
+        return String.valueOf(code);
     }
 
     private boolean validPhoneNumber(String phoneNumber) {
@@ -66,20 +73,9 @@ public class AuthServiceImplementation implements AuthService{
         appUser.setGender(Gender.valueOf(user.getGender()));
         appUser.setPhoneNumber(user.getPhoneNumber());
         appUser.setPassword(encryptPassword(user.getPassword()));
-
         userRepository.save(appUser);
     }
 
-    @Override
-    public void forgotPassword(String phoneNumber) throws MessagingException {
-        if (!validPhoneNumber(phoneNumber)) {
-            throw new MessagingException("Invalid user phone number.");
-        }
-        if (existByPhoneNumber(phoneNumber)) {
-            String otp = OTPGenerator.generateOTP();
-            log.info("This is the OTP for phone number {}: {}", phoneNumber, otp);
-        }
-    }
     @Override
     public void resetPassword(String phoneNumber, String newPassword, String confirmPassword) throws AppException {
         if (!validPhoneNumber(phoneNumber)) {
@@ -99,4 +95,19 @@ public class AuthServiceImplementation implements AuthService{
         user.setPassword(hashedNewPassword);
         userRepository.save(user);
     }
+
+    @Override
+    public void sendVerificationCode(String phoneNumber) throws AppException {
+        try {
+            String verificationCode = generateVerificationCode();
+            log.info("This is the verification code: " + verificationCode);
+            TwilioService.sendSMS(phoneNumber);
+            log.info("Verification code sent to {} successfully", phoneNumber);
+        } catch (Exception e) {
+            log.error("Error sending verification code to {}: {}", phoneNumber, e.getMessage());
+            throw new AppException("Failed to send verification code");
+        }
+    }
+
+
 }

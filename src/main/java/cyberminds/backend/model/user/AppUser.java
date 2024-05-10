@@ -35,8 +35,6 @@ public class AppUser {
 
     private Role role;
 
-    private String email;
-
     private String phoneNumber;
 
     private Set<String> following = new HashSet<>();

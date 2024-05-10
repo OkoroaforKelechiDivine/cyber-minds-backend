@@ -69,8 +69,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .sign(Algorithm.HMAC512(SECRET.getBytes(StandardCharsets.UTF_8)));
 
         ObjectMapper oMapper = new ObjectMapper();
-        String email = ((User) authResult.getPrincipal()).getUsername();
-        AppUser appUser = repository.findByEmail(email);
+        String phoneNumber = ((User) authResult.getPrincipal()).getUsername();
+        AppUser appUser = repository.findByPhoneNumber(phoneNumber);
         ResponseDTO responseDto = ResponseDTO.builder()
                 .appUser(appUser)
                 .token(token)
