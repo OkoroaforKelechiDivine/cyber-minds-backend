@@ -6,4 +6,6 @@ import lombok.Data;
 public class VerificationCodeDTO {
 
     private String phoneNumber;
+
+    private String otp;
 }
