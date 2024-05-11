@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 import static cyberminds.backend.service.auth.AuthServiceImplementation.generateVerificationCode;
 
-
 @RestController
 @RequestMapping("/api/auths")
 @Slf4j
@@ -42,9 +41,6 @@ public class AuthController {
     private static final String token = "HULq-qEwT7yuBJQSU8at7E6UGp4f0_CkCtRwTVUPCx8y1fjUNujSrM-EZyM6rkPN";
 
     private static void sendOTP(String phoneNumber) throws URISyntaxException, IOException, InterruptedException {
-        final String key = "OCAdQur6oTBPvK4ElBJTxq3s";
-        final String secret = "bkm(fyP&)cnkI@1aAnE#EKj#szbujD7WDScO6zzH";
-
         String AuthHeader = "Basic " + Base64.getEncoder().encodeToString((token+":").getBytes());
 
         JSONObject jsonBody = new JSONObject();
