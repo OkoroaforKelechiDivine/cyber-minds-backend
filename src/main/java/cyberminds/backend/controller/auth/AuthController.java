@@ -63,7 +63,7 @@ public class AuthController {
     AuthServiceImplementation authServiceImplementation;
 
     @PostMapping("/create")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException, OAuthMessageSignerException, OAuthExpectationFailedException, OAuthCommunicationException, URISyntaxException, IOException, InterruptedException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDTO user) throws AppException, URISyntaxException, IOException, InterruptedException {
         if (authServiceImplementation.existByPhoneNumber(user.getPhoneNumber())) {
             ResponseDetails responseDetails = new ResponseDetails(LocalDateTime.now(), "User with this phone number already exists", HttpStatus.CONFLICT.toString());
             return ResponseEntity.status(409).body(responseDetails);
