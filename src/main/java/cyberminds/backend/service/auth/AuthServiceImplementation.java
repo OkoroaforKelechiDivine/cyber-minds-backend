@@ -74,7 +74,7 @@ public class AuthServiceImplementation implements AuthService {
                         this.cancel();
                     }
                 },
-                TimeUnit.MINUTES.toMillis(5)
+                TimeUnit.MINUTES.toMillis(5) // 5 minutes
         );
     }
 
