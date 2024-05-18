@@ -14,8 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-//@Profile("deployment")
-@Profile("local")
+@Profile("deployment")
+//@Profile("local")
 @Slf4j
 @EnableConfigurationProperties
 public class BackendApplication {

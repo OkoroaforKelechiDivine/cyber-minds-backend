@@ -14,9 +14,10 @@ public interface UserRepository extends MongoRepository<AppUser, String> {
 
     AppUser findByFirstName(String input);
 
-    AppUser findByPhoneNumber(String phoneNumber);
+    AppUser findByEmail(String email);
 
-    Boolean existsByPhoneNumber(String phoneNumber);
+//    Boolean existsByPhoneNumber(String phoneNumber);
+    Boolean existsByEmail(String email);
 
 //    AppUser findUserById(String userId);
 }
