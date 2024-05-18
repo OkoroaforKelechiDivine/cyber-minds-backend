@@ -33,7 +33,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors()
                 .configurationSource(corsConfigurationSource()).and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/auths/create", "/api/profile/create/{userId}", "/api/auths/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/auths/create", "/api/auths/validate-otp", "/api/auths/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), context))
